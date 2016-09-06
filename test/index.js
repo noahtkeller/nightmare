@@ -300,6 +300,14 @@ describe('Nightmare', function () {
         });
     });
 
+    it('should soft timeout since the evaluate fn will never return true', function*() {
+      yield nightmare
+        .goto(fixture('navigation'))
+        .wait(function () {
+          return false;
+        }, 150);
+    });
+
     it('should wait until the evaluate fn with arguments returns true', function*() {
       yield nightmare
         .goto(fixture('navigation'))
@@ -308,6 +316,14 @@ describe('Nightmare', function () {
           var textB = document.querySelector('a.b').textContent;
           return (expectedA === textA && expectedB === textB);
         }, 'A', 'B');
+    });
+
+    it('should soft timeout since the evaluate fn with arguments will never return true', function*() {
+      yield nightmare
+        .goto(fixture('navigation'))
+        .wait(function (expectedA, expectedB) {
+          return expectedA === expectedB;
+        }, 150, 'A', 'B');
     });
 
     it('should fail if navigation target is invalid', function() {
